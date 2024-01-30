@@ -1,4 +1,6 @@
 import random
+
+
 def game(num):
     if num == 1:
         return "Випав орел"
