@@ -1,42 +1,33 @@
 import random
 
+actions = ["встати", 'сісти']
+questions = ["Ти вивчив все?", "Як тебе звати?", "Хто ти?"]
 
-def game(num):
-    if num == 1:
-        return "Випав орел"
-    elif num == 0:
-        return "Випала решка"
-    else:
-        return "Сталась помилка"
+
+def game():
+    # game
+    while True:
+        print("_____ Меню Гри ____\n\n"
+              "1. Правда\n"
+              "2. Дія\n\n"
+              "0. Завершити гру"
+              "-------------------")
+        ch = int(input("Зробіть свій вибір: "))
+        if ch == 1:
+            print("#### Ваш вибір: Правда ###")
+            variant = random.randint(0, len(questions) - 1)
+            print(f"Запитання: {questions[variant]}")
+            # continue
+        elif ch == 2:
+            print("### Ваш вибір: Дія ### ")
+            variant = random.randint(0, len(actions) - 1)
+            print(f"Дія: {actions[variant]}")
+        elif ch == 0:
+            print("_____ GAME OVER _____")
+            break
+        else:
+            print("### Сталась помилка! ###")
 
 
 if __name__ == "__main__":
-    # temperature = int(input("Enter temperature outside: "))
-    # if temperature < -30:
-    #     print("It's very cold")
-    # elif 0 > temperature > -30:
-    #     print("It's cold!")
-    # elif temperature >= 0:
-    #     print("It's warm!")
-    # else:
-    #     print("Some text")
-
-    ### Conditional for game
-    random_number = random.randint(0, 1)
-    result = game(random_number)
-    print(f"---- {result} -----")
-
-    while True:
-        print("1. Continue\n"
-              "2. Break")
-        ch = int(input("Enter your choice (num): "))
-        if ch == 1:
-            random_number = random.randint(0, 1)
-            result = game(random_number)
-            print(f"---- {result} -----")
-            continue
-        elif ch == 2:
-            break
-        else:
-            print("Enter incorrect chosen")
-            continue
+    game()
