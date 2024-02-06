@@ -12,7 +12,7 @@ from aiogram.types.reply_keyboard_markup import ReplyKeyboardMarkup
 from aiogram.types.keyboard_button import KeyboardButton
 
 # Bot token can be obtained via https://t.me/BotFather
-TOKEN = "6897684920:AAGQmHQUGpqgTaxxrSXX4R7rHfLcHxpbk5I"
+TOKEN = ""
 
 # All handlers should be attached to the Router (or Dispatcher)
 dp = Dispatcher()
