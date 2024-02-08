@@ -10,9 +10,11 @@ from aiogram.types import Message
 from aiogram.utils.markdown import hbold
 from aiogram.types.reply_keyboard_markup import ReplyKeyboardMarkup
 from aiogram.types.keyboard_button import KeyboardButton
+from aiogram.types.inline_keyboard_markup import InlineKeyboardMarkup
+from aiogram.types.inline_keyboard_button import InlineKeyboardButton
 
 # Bot token can be obtained via https://t.me/BotFather
-TOKEN = "6897684920:AAGQmHQUGpqgTaxxrSXX4R7rHfLcHxpbk5I"
+TOKEN = ""
 
 # All handlers should be attached to the Router (or Dispatcher)
 dp = Dispatcher()
@@ -23,7 +25,7 @@ def r_main_menu():
     main_menu = ReplyKeyboardMarkup(keyboard=[[
         KeyboardButton(text="Показати під-меню"), KeyboardButton(text="Видалити акаунт 🗑")
     ], [
-        KeyboardButton(text="Про нас")
+        KeyboardButton(text="Показати інлайн меню")
     ]], resize_keyboard=True)
     return main_menu
 
@@ -39,6 +41,18 @@ def r_sub_menu():
         resize_keyboard=True
     )
     return sub_menu
+
+
+#### INLINE KEYBOARD MARKUP
+def i_test_menu():
+    test_menu = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Option1", callback_data="opt1"),
+             InlineKeyboardButton(text="Option2", callback_data="opt2")],
+            [InlineKeyboardButton(text="Option3", callback_data="opt3")]
+        ]
+    )
+    return test_menu
 
 
 @dp.message(CommandStart())
@@ -58,6 +72,11 @@ async def echo_handler(message: types.Message) -> None:
             await message.answer("Ви перейшли в свій профіль!")
         elif message.text == "Показати під-меню":
             await message.answer("Ви перейшли в під-меню!", reply_markup=r_sub_menu())
+        elif message.text == "НАЗАД":
+            await message.answer("Ви в головному меню!", reply_markup=r_main_menu())
+        elif message.text == "Показати інлайн меню":
+            await message.answer("Меню, що знаходиться під цим повідомлення - є інлайновим",
+                                 reply_markup=i_test_menu())
     except TypeError:
         # But not all the types is supported to be copied so need to handle it
         await message.answer("Nice try!")
