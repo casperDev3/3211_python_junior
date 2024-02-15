@@ -63,7 +63,7 @@ async def process_callback(callback_query: types.CallbackQuery):
     if data == "txt":
         await bot.send_message(chat_id, "You press Option 1")
     elif data == "img":
-        media = open('/media/barbie.png', 'rb')
+        media = open('media/barbie.png', 'rb')
         await bot.send_document(chat_id, media, caption="test")
         media.close()
     elif data == "doc":
