@@ -14,10 +14,11 @@ from aiogram.types.inline_keyboard_markup import InlineKeyboardMarkup
 from aiogram.types.inline_keyboard_button import InlineKeyboardButton
 
 # Bot token can be obtained via https://t.me/BotFather
-TOKEN = ""
+TOKEN = "6897684920:AAGQmHQUGpqgTaxxrSXX4R7rHfLcHxpbk5I"
 
 # All handlers should be attached to the Router (or Dispatcher)
 dp = Dispatcher()
+bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
 
 
 #### REPLY KEYBOARD MARKUP
@@ -47,12 +48,26 @@ def r_sub_menu():
 def i_test_menu():
     test_menu = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Option1", callback_data="opt1"),
-             InlineKeyboardButton(text="Option2", callback_data="opt2")],
-            [InlineKeyboardButton(text="Option3", callback_data="opt3")]
+            [InlineKeyboardButton(text="Текст", callback_data="txt"),
+             InlineKeyboardButton(text="Картинка", callback_data="img")],
+            [InlineKeyboardButton(text="Документ", callback_data="doc")]
         ]
     )
     return test_menu
+
+
+@dp.callback_query(lambda c: c.data)
+async def process_callback(callback_query: types.CallbackQuery):
+    data = callback_query.data
+    chat_id = callback_query.from_user.id
+    if data == "txt":
+        await bot.send_message(chat_id, "You press Option 1")
+    elif data == "img":
+        media = open('/media/barbie.png', 'rb')
+        await bot.send_document(chat_id, media, caption="test")
+        media.close()
+    elif data == "doc":
+        await bot.send_message(chat_id, "You press Option 3")
 
 
 @dp.message(CommandStart())
