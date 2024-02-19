@@ -12,6 +12,7 @@ from aiogram.types.reply_keyboard_markup import ReplyKeyboardMarkup
 from aiogram.types.keyboard_button import KeyboardButton
 from aiogram.types.inline_keyboard_markup import InlineKeyboardMarkup
 from aiogram.types.inline_keyboard_button import InlineKeyboardButton
+from aiogram.utils.media_group import MediaGroupBuilder
 
 # Bot token can be obtained via https://t.me/BotFather
 TOKEN = "6897684920:AAGQmHQUGpqgTaxxrSXX4R7rHfLcHxpbk5I"
@@ -63,11 +64,22 @@ async def process_callback(callback_query: types.CallbackQuery):
     if data == "txt":
         await bot.send_message(chat_id, "You press Option 1")
     elif data == "img":
-        media = open('media/barbie.png', 'rb')
-        await bot.send_document(chat_id, media, caption="test")
-        media.close()
+        media_group = MediaGroupBuilder(caption="Media group caption")
+        # Add photo
+        media_group.add_photo(media="https://picsum.photos/200/300")
+        # Dynamically add photo with known type without using separate method
+        await bot.send_media_group(chat_id=chat_id, media=media_group.build())
     elif data == "doc":
-        await bot.send_message(chat_id, "You press Option 3")
+        # await bot.send_sticker(chat_id, "https://picsum.photos/200/300")
+        await bot.send_contact(chat_id, '380969999999', "John")
+        # await bot.send_location(chat_id, 32.22345, 35.24851651)
+        # await bot.set_chat_title(chat_id, "Test Change Name Chat") # only public channels
+        # await bot.send_poll(chat_id, 'test Poll)', ["test1", "test2"], is_anonymous=False,
+        #                     allows_multiple_answers=True)
+        # await bot.send_chat_action(chat_id, 'record_voice') # only public channels
+
+
+        
 
 
 @dp.message(CommandStart())
