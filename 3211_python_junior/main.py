@@ -14,23 +14,21 @@ from aiogram.types.inline_keyboard_markup import InlineKeyboardMarkup
 from aiogram.types.inline_keyboard_button import InlineKeyboardButton
 from aiogram.utils.media_group import MediaGroupBuilder
 
+
 # Bot token can be obtained via https://t.me/BotFather
 TOKEN = "6897684920:AAGQmHQUGpqgTaxxrSXX4R7rHfLcHxpbk5I"
 
 # All handlers should be attached to the Router (or Dispatcher)
 dp = Dispatcher()
 bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
-state = {
-    "mode": "default"
-}  # default, register
+states = {}  # default, register - modes
 
 
 #### REPLY KEYBOARD MARKUP
 def r_main_menu():
     main_menu = ReplyKeyboardMarkup(keyboard=[
-        [KeyboardButton(text="Заповнити анкету")],
         [KeyboardButton(text="Показати під-меню"), KeyboardButton(text="Видалити акаунт 🗑")],
-        [KeyboardButton(text="Показати інлайн меню")]
+        [KeyboardButton(text="Показати інлайн меню"), KeyboardButton(text="Заповнити анкету")]
     ], resize_keyboard=True)
     return main_menu
 
@@ -84,30 +82,31 @@ async def process_callback(callback_query: types.CallbackQuery):
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
+    states[f"{message.chat.id}"] = "default"
     await message.answer(f"Hello, {hbold(message.from_user.full_name)}!", reply_markup=r_main_menu())
 
 
 @dp.message()
 async def echo_handler(message: types.Message, mode=None) -> None:
     try:
-        if state["mode"] == "default":
-            if message.text == "3211":
-                await message.answer('Я знаю, це ваша група!')
-            elif message.text == "Мій профіль 🥷":
-                await message.answer("Ви перейшли в свій профіль!")
-            elif message.text == "Показати під-меню":
-                await message.answer("Ви перейшли в під-меню!", reply_markup=r_sub_menu())
-            elif message.text == "НАЗАД":
-                await message.answer("Ви в головному меню!", reply_markup=r_main_menu())
-            elif message.text == "Показати інлайн меню":
-                await message.answer("Меню, що знаходиться під цим повідомлення - є інлайновим",
-                                     reply_markup=i_test_menu())
-            elif message.text == "Заповнити анкету":
-                state["mode"] = "register"
-                await message.answer("Ви почали запавнювати анкету!")
+        if message.text == "3211":
+            await message.answer('Я знаю, це ваша група!')
+        elif message.text == "Мій профіль 🥷":
+            await message.answer("Ви перейшли в свій профіль!")
+        elif message.text == "Показати під-меню":
+            await message.answer("Ви перейшли в під-меню!", reply_markup=r_sub_menu())
+        elif message.text == "НАЗАД":
+            await message.answer("Ви в головному меню!", reply_markup=r_main_menu())
+        elif message.text == "Показати інлайн меню":
+            await message.answer("Меню, що знаходиться під цим повідомлення - є інлайновим",
+                                 reply_markup=i_test_menu())
+        elif message.text == "Заповнити анкету":
+            states[f"{message.chat.id}"] = "register"
+            await message.answer("Ви почали запавнювати анкету!")
+        # while True:
+        #     await bot.send_message(message.chat.id, f"Я СПАМ БОТ! Я кращий за тебе)) Ось твій текст: {message.text}")
+        #     await asyncio.sleep(1/3)  # timeout 10 s
 
-        elif state["mode"] == "register":
-            print("You start REGISTER MODE")
     except TypeError:
         # But not all the types is supported to be copied so need to handle it
         await message.answer("Nice try!")
